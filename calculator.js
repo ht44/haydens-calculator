@@ -7,7 +7,7 @@ const special = document.querySelectorAll(".specialBtns");
 const resultButton = document.getElementById("equals");
 
 // Variables —————————————————————————————
-let values = [0];
+let values = [];
 let storeValue = "";
 let valueString = "";
 let dividing = false;
@@ -15,6 +15,7 @@ let multiplying = false;
 let subtracting = false;
 let evaluating = false;
 let adding = false;
+let empty = true;
 let result = 0;
 
 // Functions —————————————————————————————
@@ -32,6 +33,8 @@ const operate = () => {
     result = subtract(values[values.length - 2], values[values.length - 1]);
   } else if (adding) {
     result = add(values[values.length - 2], values[values.length - 1]);
+  } else {
+    return values[values.length - 1];
   }
   if (result !== Math.round(result)) {
     values.push(parseFloat(result.toFixed(2)));
@@ -43,13 +46,37 @@ const operate = () => {
   console.log(values);
 };
 
+const operateEmpty = () => {
+  if (dividing) {
+    result = divide(0, values[values.length - 1]);
+  } else if (multiplying) {
+    result = multiply(0, values[values.length - 1]);
+  } else if (subtracting) {
+    result = subtract(0, values[values.length - 1]);
+  } else if (adding) {
+    result = add(0, values[values.length - 1]);
+  }
+  if (result !== Math.round(result)) {
+    values.push(parseFloat(result.toFixed(2)));
+    consoleField.innerHTML = (parseFloat(result.toFixed(2)));
+  } else {
+    values.push(parseFloat(result));
+    consoleField.innerHTML = parseFloat(result);
+  }
+  console.log(values);
+  empty = false;
+};
+
 const evaluate = () => {
   evaluating = true;
   values.push(parseFloat(valueString));
   operate();
 };
 
-
+const whichOperate = () => {
+  if (empty) { operateEmpty(); }
+  else { operate(); }
+};
 
 // Code ——————————————————————————————————
 
@@ -69,6 +96,9 @@ for (let i = 0; i < numButtons.length; i++) {
 // Listening for "control" button clicks —
 for (let i = 0; i < controls.length; i++) {
   controls[i].addEventListener("click", function() {
+    if (consoleField.innerHTML === "0") {
+      valueString = "0";
+    }
     if (evaluating === false) {
       values.push(parseFloat(valueString));
     }
