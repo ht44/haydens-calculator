@@ -146,6 +146,7 @@ for (let i = 0; i < controls.length; i++) {
       }
     } else if (controls[i].innerHTML === "×") {
       if (addingOrSubtracting) {
+        pemdas = values[values.length - 2];
         multiplyingOrDividing = true;
         operateAfter();
         dividing = false;
@@ -162,12 +163,18 @@ for (let i = 0; i < controls.length; i++) {
       }
     } else if (controls[i].innerHTML === "-") {
       addingOrSubtracting = true;
+      if (multiplyingOrDividing) {
+        doneMultOrDiv = true;
+      }
       if (values.length > 1 && evaluating === false) { operate(); }
       dividing = false;
       multiplying = false;
       subtracting = true;
       adding = false;
-      addingOrSubtracting = true;
+      multiplyingOrDividing = false;
+      if (doneMultOrDiv) {
+        orderOp();
+      }
     } else if (controls[i].innerHTML === "+") {
       addingOrSubtracting = true;
       if (multiplyingOrDividing) {
