@@ -21,6 +21,7 @@ let doneOrderOp = false;
 let evaluating = false;
 let operating = false;
 let empty = true;
+let posNeg = true;
 let result = 0;
 let selfOperate = 0;
 let pemdas = values[values.length - 2];
@@ -163,6 +164,7 @@ for (let i = 0; i < controls.length; i++) {
       }
     } else if (controls[i].innerHTML === "-") {
       addingOrSubtracting = true;
+      breakSubtract = true;
       if (multiplyingOrDividing) {
         doneMultOrDiv = true;
       }
@@ -173,10 +175,17 @@ for (let i = 0; i < controls.length; i++) {
       adding = false;
       multiplyingOrDividing = false;
       if (doneMultOrDiv) {
+        if (breakAdd) {
+          dividing = false;
+          multiplying = false;
+          subtracting = false;
+          adding = true;
+        }
         orderOp();
       }
     } else if (controls[i].innerHTML === "+") {
       addingOrSubtracting = true;
+      breakAdd = true;
       if (multiplyingOrDividing) {
         doneMultOrDiv = true;
       }
