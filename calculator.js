@@ -20,10 +20,13 @@ let doneMultOrDiv = false;
 let doneOrderOp = false;
 let evaluating = false;
 let operating = false;
-let breakAdd = false;
+let breakDiv = false;
+let breakMult = false;
 let breakSubtract = false;
+let breakAdd = false;
 let empty = true;
 let posNeg = true;
+let ranPemdas = false;
 let result = 0;
 let selfOperate = 0;
 let pemdas = values[values.length - 2];
@@ -131,6 +134,8 @@ for (let i = 0; i < controls.length; i++) {
     storeValue = parseFloat(valueString);
     valueString = "";
     if (controls[i].innerHTML === "÷") {
+      breakDiv = true;
+      breakMult = false;
       if (addingOrSubtracting) {
         pemdas = values[values.length - 2];
         multiplyingOrDividing = true;
@@ -148,6 +153,8 @@ for (let i = 0; i < controls.length; i++) {
         adding = false;
       }
     } else if (controls[i].innerHTML === "×") {
+      breakMult = true;
+      breakDiv = false;
       if (addingOrSubtracting) {
         pemdas = values[values.length - 2];
         multiplyingOrDividing = true;
@@ -187,8 +194,11 @@ for (let i = 0; i < controls.length; i++) {
         adding = false;
       }
     } else if (controls[i].innerHTML === "+") {
+      console.log(multiplyingOrDividing);
       addingOrSubtracting = true;
       breakAdd = true;
+      breakMult = false;
+      breakDiv = false;
       if (multiplyingOrDividing) {
         doneMultOrDiv = true;
       }
@@ -210,8 +220,8 @@ for (let i = 0; i < controls.length; i++) {
       }
     }
     evaluating = false;
+    ranPemdas = false;
     console.log(values);
-    console.log(addingOrSubtracting, multiplyingOrDividing, doneMultOrDiv);
     // console.log(pemdas);
     // console.log(dividing, multiplying, subtracting, adding);
   });
@@ -219,9 +229,9 @@ for (let i = 0; i < controls.length; i++) {
 
 // Listening for "result" button click ———
 resultButton.addEventListener("click", function() {
-  //ADD something to set multiplyingOrDividing to false
-  evaluating = true;
+  // evaluating = true;
   if (operating) {
+    evaluating = true;
     selfOperate = storeValue;
     values.push(selfOperate);
     operate();
@@ -244,17 +254,31 @@ resultButton.addEventListener("click", function() {
       subtracting = true;
       adding = false;
     }
-    orderOp();
+    if (!ranPemdas) {
+      orderOp();
+    } else {
+      operateAfter();
+    }
+    if (breakDiv) {
+      dividing = true;
+      multiplying = false;
+      subtracting = false;
+      adding = false;
+      breakDiv = false;
+    }
+    if (breakMult) {
+      dividing = false;
+      multiplying = true;
+      subtracting = false;
+      adding = false;
+      breakMult = false;
+    }
+    ranPemdas = true;
   }
-  console.log(dividing, multiplying, subtracting, adding);
+  doneMultOrDiv = false;
+  multiplyingOrDividing = false;
+  console.log(evaluating)
 });
-
-
-
-
-
-
-
 
 
 
