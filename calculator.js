@@ -20,6 +20,8 @@ let doneMultOrDiv = false;
 let doneOrderOp = false;
 let evaluating = false;
 let operating = false;
+let breakAdd = false;
+let breakSubtract = false;
 let empty = true;
 let posNeg = true;
 let result = 0;
@@ -226,8 +228,25 @@ resultButton.addEventListener("click", function() {
   } else {
     evaluate();
   }
-  console.log(values);
-  console.log(addingOrSubtracting, multiplyingOrDividing);
+  if (multiplyingOrDividing) {
+    doneMultOrDiv = true;
+  }
+  if (doneMultOrDiv) {
+    if (breakAdd) {
+      dividing = false;
+      multiplying = false;
+      subtracting = false;
+      adding = true;
+    }
+    if (breakSubtract) {
+      dividing = false;
+      multiplying = false;
+      subtracting = true;
+      adding = false;
+    }
+    orderOp();
+  }
+  console.log(dividing, multiplying, subtracting, adding);
 });
 
 
