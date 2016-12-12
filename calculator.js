@@ -21,6 +21,11 @@ let operating = false;
 let empty = true;
 let result = 0;
 let selfOperate = 0;
+let crab = values[values.length - 2];
+
+let tester1;
+let tester2;
+
 const ultValue = values[values.length - 1];
 const penultValue = values[values.length - 2];
 
@@ -31,14 +36,19 @@ const subtract = (numA, numB) => numA - numB;
 const add = (numA, numB) => numA + numB;
 
 const operate = () => {
+  if (multiplyingOrDividing) {
+    tester1 = crab;
+  } else {
+    tester1 = values[values.length - 2];
+  }
   if (dividing) {
-    result = divide(values[values.length - 2], values[values.length - 1]);
+    result = divide(tester1, values[values.length - 1]);
   } else if (multiplying) {
-    result = multiply(values[values.length - 2], values[values.length - 1]);
+    result = multiply(tester1, values[values.length - 1]);
   } else if (subtracting) {
-    result = subtract(values[values.length - 2], values[values.length - 1]);
+    result = subtract(tester1, values[values.length - 1]);
   } else if (adding) {
-    result = add(values[values.length - 2], values[values.length - 1]);
+    result = add(tester1, values[values.length - 1]);
   } else {
     return values[values.length - 1];
   }
@@ -64,11 +74,9 @@ const operateAfter = () => {
     return values[values.length - 1];
   }
   // if (result !== Math.round(result)) {
-  //   values.pop();
   //   values.push(parseFloat(result.toFixed(2)));
   //   consoleField.innerHTML = (parseFloat(result.toFixed(2)));
   // } else {
-  //   values.pop();
   //   values.push(parseFloat(result));
   //   consoleField.innerHTML = parseFloat(result);
   // }
@@ -112,6 +120,7 @@ for (let i = 0; i < controls.length; i++) {
     valueString = "";
     if (controls[i].innerHTML === "÷") {
       if (addingOrSubtracting) {
+        crab = values[values.length - 2];
         multiplyingOrDividing = true;
         operateAfter();
         dividing = true;
@@ -134,6 +143,7 @@ for (let i = 0; i < controls.length; i++) {
         multiplying = true;
         subtracting = false;
         adding = false;
+        addingOrSubtracting = false;
       } else {
         if (values.length > 1 && evaluating === false) { operate(); }
         dividing = false;
@@ -142,6 +152,7 @@ for (let i = 0; i < controls.length; i++) {
         adding = false;
       }
     } else if (controls[i].innerHTML === "-") {
+      addingOrSubtracting = true;
       if (values.length > 1 && evaluating === false) { operate(); }
       dividing = false;
       multiplying = false;
@@ -149,15 +160,18 @@ for (let i = 0; i < controls.length; i++) {
       adding = false;
       addingOrSubtracting = true;
     } else if (controls[i].innerHTML === "+") {
+      addingOrSubtracting = true;
       if (values.length > 1 && evaluating === false) { operate(); }
       dividing = false;
       multiplying = false;
       subtracting = false;
       adding = true;
-      addingOrSubtracting = true;
     }
     evaluating = false;
     console.log(values);
+    console.log(addingOrSubtracting, multiplyingOrDividing);
+    // console.log(crab);
+    // console.log(dividing, multiplying, subtracting, adding);
   });
 }
 
@@ -173,7 +187,35 @@ resultButton.addEventListener("click", function() {
     evaluate();
   }
   console.log(values);
+  console.log(addingOrSubtracting, multiplyingOrDividing);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Listening for "special" button clicks —
 for (let i = 0; i < special.length; i++) {
