@@ -176,12 +176,13 @@ for (let i = 0; i < controls.length; i++) {
       multiplyingOrDividing = false;
       if (doneMultOrDiv) {
         if (breakAdd) {
-          dividing = false;
-          multiplying = false;
           subtracting = false;
           adding = true;
+          breakAdd = false;
         }
         orderOp();
+        subtracting = true;
+        adding = false;
       }
     } else if (controls[i].innerHTML === "+") {
       addingOrSubtracting = true;
@@ -196,7 +197,14 @@ for (let i = 0; i < controls.length; i++) {
       adding = true;
       multiplyingOrDividing = false;
       if (doneMultOrDiv) {
+        if (breakSubtract) {
+          subtracting = true;
+          adding = false;
+          breakSubtract = false;
+        }
         orderOp();
+        subtracting = false;
+        adding = true;
       }
     }
     evaluating = false;
