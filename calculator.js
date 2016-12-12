@@ -31,9 +31,6 @@ let result = 0;
 let selfOperate = 0;
 let pemdas = values[values.length - 2];
 
-const ultValue = values[values.length - 1];
-const penultValue = values[values.length - 2];
-
 // Functions —————————————————————————————
 const divide = (numA, numB) => numA / numB;
 const multiply = (numA, numB) => numA * numB;
@@ -122,62 +119,83 @@ for (let i = 0; i < numButtons.length; i++) {
 // Listening for "control" button clicks —
 for (let i = 0; i < controls.length; i++) {
   controls[i].addEventListener("click", function() {
-    operating = true;
+    // operating = true;
     // Empty case ————————————————————————
     if (consoleField.innerHTML === "0") {
       valueString = "0";
     }
     // Unless evaluating —————————————————
-    if (evaluating === false) {
+    if (evaluating === false && !operating) {
       values.push(parseFloat(valueString));
     }
     storeValue = parseFloat(valueString);
     valueString = "";
+
+    // DIVIDE BUTTON ——————————————————————
     if (controls[i].innerHTML === "÷") {
       breakDiv = true;
       breakMult = false;
       if (addingOrSubtracting) {
         pemdas = values[values.length - 2];
         multiplyingOrDividing = true;
-        operateAfter();
+        if (!operating) {operateAfter();}
         dividing = true;
         multiplying = false;
         subtracting = false;
         adding = false;
         addingOrSubtracting = false;
       } else {
-        if (values.length > 1 && evaluating === false) { operate(); }
+        if (values.length > 1 && evaluating === false) {
+          if (!operating) {
+            operate();
+          }
+        }
         dividing = true;
         multiplying = false;
         subtracting = false;
         adding = false;
       }
+
+    // MULTIPLY BUTTON —————————————————————
     } else if (controls[i].innerHTML === "×") {
       breakMult = true;
       breakDiv = false;
       if (addingOrSubtracting) {
         pemdas = values[values.length - 2];
         multiplyingOrDividing = true;
-        operateAfter();
+        if (!operating) {operateAfter();}
         dividing = false;
         multiplying = true;
         subtracting = false;
         adding = false;
         addingOrSubtracting = false;
       } else {
-        if (values.length > 1 && evaluating === false) { operate(); }
+        if (values.length > 1 && evaluating === false) {
+          if (!operating) {
+            operate();
+          }
+        }
         dividing = false;
         multiplying = true;
         subtracting = false;
         adding = false;
       }
+
+    // SUBTRACT BUTTON ——————————————————————
     } else if (controls[i].innerHTML === "-") {
       addingOrSubtracting = true;
       breakSubtract = true;
+      breakMult = false;
+      breakDiv = false;
       if (multiplyingOrDividing) {
         doneMultOrDiv = true;
       }
-      if (values.length > 1 && evaluating === false) { operate(); }
+      if (values.length > 1 && evaluating === false) {
+        if (!operating) {
+          operate();
+          operating = true;
+        }
+      }
       dividing = false;
       multiplying = false;
       subtracting = true;
@@ -189,10 +207,12 @@ for (let i = 0; i < controls.length; i++) {
           adding = true;
           breakAdd = false;
         }
-        orderOp();
+        if (!operating) {orderOp();}
         subtracting = true;
         adding = false;
       }
+
+    // ADD BUTTON ———————————————————————————
     } else if (controls[i].innerHTML === "+") {
       console.log(multiplyingOrDividing);
       addingOrSubtracting = true;
@@ -202,7 +222,12 @@ for (let i = 0; i < controls.length; i++) {
       if (multiplyingOrDividing) {
         doneMultOrDiv = true;
       }
-      if (values.length > 1 && evaluating === false) { operate(); }
+      if (values.length > 1 && evaluating === false) {
+        if (!operating) {
+          operate();
+          operating = true;
+        }
+      }
       dividing = false;
       multiplying = false;
       subtracting = false;
@@ -214,11 +239,12 @@ for (let i = 0; i < controls.length; i++) {
           adding = false;
           breakSubtract = false;
         }
-        orderOp();
+        if (!operating) {orderOp();}
         subtracting = false;
         adding = true;
       }
     }
+    operating = true;
     evaluating = false;
     ranPemdas = false;
     console.log(values);
@@ -229,7 +255,6 @@ for (let i = 0; i < controls.length; i++) {
 
 // Listening for "result" button click ———
 resultButton.addEventListener("click", function() {
-  // evaluating = true;
   if (operating) {
     evaluating = true;
     selfOperate = storeValue;
@@ -279,26 +304,6 @@ resultButton.addEventListener("click", function() {
   multiplyingOrDividing = false;
   console.log(evaluating)
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Listening for "special" button clicks —
 for (let i = 0; i < special.length; i++) {
