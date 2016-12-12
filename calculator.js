@@ -14,11 +14,15 @@ let dividing = false;
 let multiplying = false;
 let subtracting = false;
 let adding = false;
+let addingOrSubtracting = false;
+let multiplyingOrDividing = false;
 let evaluating = false;
 let operating = false;
 let empty = true;
 let result = 0;
 let selfOperate = 0;
+const ultValue = values[values.length - 1];
+const penultValue = values[values.length - 2];
 
 // Functions —————————————————————————————
 const divide = (numA, numB) => numA / numB;
@@ -47,6 +51,29 @@ const operate = () => {
   }
 };
 
+const operateAfter = () => {
+  if (dividing) {
+    result = divide(values[values.length - 2], values[values.length - 1]);
+  } else if (multiplying) {
+    result = multiply(values[values.length - 2], values[values.length - 1]);
+  } else if (subtracting) {
+    result = subtract(values[values.length - 2], values[values.length - 1]);
+  } else if (adding) {
+    result = add(values[values.length - 2], values[values.length - 1]);
+  } else {
+    return values[values.length - 1];
+  }
+  // if (result !== Math.round(result)) {
+  //   values.pop();
+  //   values.push(parseFloat(result.toFixed(2)));
+  //   consoleField.innerHTML = (parseFloat(result.toFixed(2)));
+  // } else {
+  //   values.pop();
+  //   values.push(parseFloat(result));
+  //   consoleField.innerHTML = parseFloat(result);
+  // }
+};
+
 const evaluate = () => {
   evaluating = true;
   values.push(parseFloat(valueString));
@@ -73,38 +100,61 @@ for (let i = 0; i < numButtons.length; i++) {
 for (let i = 0; i < controls.length; i++) {
   controls[i].addEventListener("click", function() {
     operating = true;
+    // Empty case ————————————————————————
     if (consoleField.innerHTML === "0") {
       valueString = "0";
     }
+    // Unless evaluating —————————————————
     if (evaluating === false) {
       values.push(parseFloat(valueString));
     }
     storeValue = parseFloat(valueString);
     valueString = "";
     if (controls[i].innerHTML === "÷") {
-      if (values.length > 1 && evaluating === false) { operate(); }
-      dividing = true;
-      multiplying = false;
-      subtracting = false;
-      adding = false;
+      if (addingOrSubtracting) {
+        multiplyingOrDividing = true;
+        operateAfter();
+        dividing = true;
+        multiplying = false;
+        subtracting = false;
+        adding = false;
+        addingOrSubtracting = false;
+      } else {
+        if (values.length > 1 && evaluating === false) { operate(); }
+        dividing = true;
+        multiplying = false;
+        subtracting = false;
+        adding = false;
+      }
     } else if (controls[i].innerHTML === "×") {
-      if (values.length > 1 && evaluating === false) { operate(); }
-      dividing = false;
-      multiplying = true;
-      subtracting = false;
-      adding = false;
+      if (addingOrSubtracting) {
+        multiplyingOrDividing = true;
+        operateAfter();
+        dividing = false;
+        multiplying = true;
+        subtracting = false;
+        adding = false;
+      } else {
+        if (values.length > 1 && evaluating === false) { operate(); }
+        dividing = false;
+        multiplying = true;
+        subtracting = false;
+        adding = false;
+      }
     } else if (controls[i].innerHTML === "-") {
       if (values.length > 1 && evaluating === false) { operate(); }
       dividing = false;
       multiplying = false;
       subtracting = true;
       adding = false;
+      addingOrSubtracting = true;
     } else if (controls[i].innerHTML === "+") {
       if (values.length > 1 && evaluating === false) { operate(); }
       dividing = false;
       multiplying = false;
       subtracting = false;
       adding = true;
+      addingOrSubtracting = true;
     }
     evaluating = false;
     console.log(values);
@@ -113,9 +163,11 @@ for (let i = 0; i < controls.length; i++) {
 
 // Listening for "result" button click ———
 resultButton.addEventListener("click", function() {
+  //ADD something to set multiplyingOrDividing to false
+  evaluating = true;
   if (operating) {
     selfOperate = storeValue;
-    values.push(storeValue);
+    values.push(selfOperate);
     operate();
   } else {
     evaluate();
