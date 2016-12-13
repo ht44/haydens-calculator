@@ -28,6 +28,8 @@ let breakAdd = false;
 let empty = true;
 let posNeg = true;
 let ranPemdas = false;
+let negating = false;
+let percenting = false;
 let result = 0;
 let selfOperate = 0;
 let pemdas = values[values.length - 2];
@@ -285,6 +287,12 @@ for (let i = 0; i < controls.length; i++) {
 
 // Listening for "result" button click ———
 resultButton.addEventListener("click", function() {
+  if (percenting) {
+    breakDiv = false;
+    breakMult = false;
+    breakAdd = false;
+    breakSubtract = false;
+  }
   evaluating = true;
   if (operating) {
     selfOperate = storeValue;
@@ -337,6 +345,7 @@ resultButton.addEventListener("click", function() {
   doneMultOrDiv = false;
   multiplyingOrDividing = false;
   specOp = false;
+  percenting = false;
   console.log(values);
 });
 
@@ -354,13 +363,16 @@ for (let i = 0; i < special.length; i++) {
       consoleField.innerHTML = "0";
       special[i].innerHTML = "AC";
     } else if (special[i].innerHTML === "±") {
-      if (values.length < 1) {
+      if (values.length < 1 || percenting) {
         values.push(parseFloat(valueString));
       }
       values[values.length - 1] -= values[values.length - 1] * 2;
       consoleField.innerHTML = values[values.length - 1];
+      negating = true;
+      percenting = false;
     } else if (special[i].innerHTML === "%") {
       if (breakDiv || breakMult || breakAdd || breakSubtract) {
+        console.log("redcrab");
         if (breakDiv || breakSubtract || breakAdd) {
           multiplying = true;
         }
@@ -371,22 +383,22 @@ for (let i = 0; i < special.length; i++) {
         valueString = consoleField.innerHTML;
         values.pop();
         values.pop();
-        console.log(values);
         if (breakDiv || breakSubtract || breakAdd) {
           multiplying = false;
         }
         specOp = true;
-      } else if (!specOp) {
+        console.log(values);
+      } else {
+        console.log("bluecrab");
         if (values.length < 1) {
           values.push(parseFloat(valueString));
         }
         values[values.length - 1] = values[values.length - 1] / 100;
         consoleField.innerHTML = values[values.length - 1];
+        console.log(values);
       }
-      breakDiv = false;
-      breakMult = false;
-      breakAdd = false;
-      breakSubtract = false;
+      percenting = true;
+      negating = false;
     }
   });
 }
