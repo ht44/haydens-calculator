@@ -25,6 +25,7 @@ let breakDiv = false;
 let breakMult = false;
 let breakSubtract = false;
 let breakAdd = false;
+let breakPercent = true;
 let empty = true;
 let posNeg = true;
 let ranPemdas = false;
@@ -150,6 +151,9 @@ for (let i = 0; i < controls.length; i++) {
         multiplyingOrDividing = true;
       }
       if (addingOrSubtracting) {
+        if (percenting) {
+          breakPercent = true;
+        }
         pemdas = values[values.length - 2];
         multiplyingOrDividing = true;
         if (!operating) {
@@ -183,6 +187,9 @@ for (let i = 0; i < controls.length; i++) {
         multiplyingOrDividing = true;
       }
       if (addingOrSubtracting) {
+        if (percenting) {
+          breakPercent = true;
+        }
         pemdas = values[values.length - 2];
         multiplyingOrDividing = true;
         if (!operating) {
@@ -287,11 +294,9 @@ for (let i = 0; i < controls.length; i++) {
 
 // Listening for "result" button click ———
 resultButton.addEventListener("click", function() {
-  if (percenting) {
-    breakDiv = false;
-    breakMult = false;
-    breakAdd = false;
-    breakSubtract = false;
+  console.log(breakDiv, breakMult, breakSubtract, breakAdd);
+  if (breakPercent) {
+    ranPemdas = true;
   }
   evaluating = true;
   if (operating) {
@@ -311,12 +316,14 @@ resultButton.addEventListener("click", function() {
       multiplying = false;
       subtracting = false;
       adding = true;
+      breakSubtract = false;
     }
     if (breakSubtract) {
       dividing = false;
       multiplying = false;
       subtracting = true;
       adding = false;
+      breakAdd = false;
     }
     console.log(ranPemdas, operating);
     if (!ranPemdas || operating) {
@@ -325,6 +332,9 @@ resultButton.addEventListener("click", function() {
     } else {
       console.log("operateAfter");
       operateAfter();
+    }
+    if (breakPercent) {
+      orderOp();
     }
     if (breakDiv) {
       dividing = true;
@@ -346,6 +356,13 @@ resultButton.addEventListener("click", function() {
   multiplyingOrDividing = false;
   specOp = false;
   percenting = false;
+  if (breakPercent) {
+    breakDiv = false;
+    breakMult = false;
+    breakAdd = false;
+    breakSubtract = false;
+  }
+  breakPercent = false;
   console.log(values);
 });
 
@@ -358,22 +375,49 @@ for (let i = 0; i < special.length; i++) {
       subtracting = false;
       adding = false;
       evaluating = false;
+      valueString = "";
     } else if (special[i].innerHTML === "C") {
       valueString = "";
       consoleField.innerHTML = "0";
       special[i].innerHTML = "AC";
     } else if (special[i].innerHTML === "±") {
-      if (values.length < 1 || percenting) {
+      if (values.length < 1) {
         values.push(parseFloat(valueString));
       }
       values[values.length - 1] -= values[values.length - 1] * 2;
       consoleField.innerHTML = values[values.length - 1];
       negating = true;
       percenting = false;
+      valueString = consoleField.innerHTML;
+      console.log(values);
     } else if (special[i].innerHTML === "%") {
       if (breakDiv || breakMult || breakAdd || breakSubtract) {
-        console.log("redcrab");
+
+        if (breakDiv) {
+          dividing = true;
+          multiplying = false;
+          subtracting = false;
+          adding = false;
+        } else if (breakMult) {
+          dividing = false;
+          multiplying = true;
+          subtracting = false;
+          adding = false;
+        } else if (breakSubtract) {
+          dividing = false;
+          multiplying = false;
+          subtracting = true;
+          adding = false;
+        } else if (breakAdd) {
+          dividing = false;
+          multiplying = false;
+          subtracting = false;
+          adding = true;
+        }
+
+        pemdas = values[values.length - 1];
         if (breakDiv || breakSubtract || breakAdd) {
+          dividing = false;
           multiplying = true;
         }
         values.push(parseFloat(valueString));
@@ -385,11 +429,13 @@ for (let i = 0; i < special.length; i++) {
         values.pop();
         if (breakDiv || breakSubtract || breakAdd) {
           multiplying = false;
+          if (breakDiv) {
+            dividing = true;
+          }
         }
         specOp = true;
         console.log(values);
       } else {
-        console.log("bluecrab");
         if (values.length < 1) {
           values.push(parseFloat(valueString));
         }
@@ -399,6 +445,7 @@ for (let i = 0; i < special.length; i++) {
       }
       percenting = true;
       negating = false;
+      console.log(valueString);
     }
   });
 }
