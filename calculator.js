@@ -136,6 +136,9 @@ for (let i = 0; i < controls.length; i++) {
     if (controls[i].innerHTML === "÷") {
       breakDiv = true;
       breakMult = false;
+      if (evaluating) {
+        multiplyingOrDividing = true;
+      }
       if (addingOrSubtracting) {
         pemdas = values[values.length - 2];
         multiplyingOrDividing = true;
@@ -163,6 +166,9 @@ for (let i = 0; i < controls.length; i++) {
     } else if (controls[i].innerHTML === "×") {
       breakMult = true;
       breakDiv = false;
+      if (evaluating) {
+        multiplyingOrDividing = true;
+      }
       if (addingOrSubtracting) {
         pemdas = values[values.length - 2];
         multiplyingOrDividing = true;
@@ -250,11 +256,15 @@ for (let i = 0; i < controls.length; i++) {
         adding = true;
       }
     }
+    // valueString = consoleField.innerHTML;
+    // storeValue = parseFloat(valueString);
+    // valueString = "";
     operating = true;
+    if (evaluating) {
+      ranPemdas = true;
+    }
     evaluating = false;
-    ranPemdas = false;
     console.log(values);
-    console.log(operating);
     // console.log(pemdas);
     // console.log(dividing, multiplying, subtracting, adding);
   });
@@ -262,12 +272,10 @@ for (let i = 0; i < controls.length; i++) {
 
 // Listening for "result" button click ———
 resultButton.addEventListener("click", function() {
-  console.log(operating);
   if (operating) {
     evaluating = true;
     selfOperate = storeValue;
     values.push(selfOperate);
-    console.log(values);
     operate();
     doneMultOrDiv = false;
   } else {
@@ -289,9 +297,12 @@ resultButton.addEventListener("click", function() {
       subtracting = true;
       adding = false;
     }
-    if (!ranPemdas) {
+    console.log(ranPemdas, operating);
+    if (!ranPemdas || operating) {
+      console.log("orderOp");
       orderOp();
     } else {
+      console.log("operateAfter");
       operateAfter();
     }
     if (breakDiv) {
@@ -312,7 +323,7 @@ resultButton.addEventListener("click", function() {
   }
   doneMultOrDiv = false;
   multiplyingOrDividing = false;
-  console.log(storeValue);
+  console.log(values);
 });
 
 // Listening for "special" button clicks —
