@@ -26,6 +26,7 @@ let breakMult = false;
 let breakSubtract = false;
 let breakAdd = false;
 let breakPercent = true;
+let breakNegate = false;
 let empty = true;
 let posNeg = true;
 let ranPemdas = false;
@@ -99,7 +100,10 @@ const operateAfter = () => {
 
 const evaluate = () => {
   evaluating = true;
-  values.push(parseFloat(valueString));
+  if (!negating) {
+    values.push(parseFloat(valueString));
+  }
+  negating = false;
   operate();
 };
 
@@ -117,6 +121,9 @@ for (let i = 0; i < numButtons.length; i++) {
       valueString = "";
       evaluating = false;
     }
+    if (addingOrSubtracting || multiplyingOrDividing) {
+      breakNegate = true;
+    }
     if (!valueString.includes(".") || numButtons[i].innerHTML !== ".") {
       if (valueString === "" && numButtons[i].innerHTML === ".") {
         valueString = "0";
@@ -132,6 +139,9 @@ for (let i = 0; i < controls.length; i++) {
   controls[i].addEventListener("click", function() {
     // operating = true;
     // Empty case ————————————————————————
+    if (negating) {
+      breakNegate = true;
+    }
     if (consoleField.innerHTML === "0") {
       valueString = "0";
     }
@@ -305,6 +315,7 @@ resultButton.addEventListener("click", function() {
     operate();
     doneMultOrDiv = false;
   } else {
+    console.log("kingcrab");
     evaluate();
   }
   if (multiplyingOrDividing && !operating) {
@@ -363,6 +374,7 @@ resultButton.addEventListener("click", function() {
     breakSubtract = false;
   }
   breakPercent = false;
+  breakNegate = false;
   console.log(values);
 });
 
@@ -376,23 +388,26 @@ for (let i = 0; i < special.length; i++) {
       adding = false;
       evaluating = false;
       valueString = "";
+      values = [];
     } else if (special[i].innerHTML === "C") {
       valueString = "";
       consoleField.innerHTML = "0";
       special[i].innerHTML = "AC";
-    } else if (special[i].innerHTML === "±") {
-      if (values.length < 1) {
+    } else if (special[i].innerHTML === "±" && consoleField.innerHTML !== "0") {
+      if (values.length < 1 || breakNegate) {
         values.push(parseFloat(valueString));
       }
       values[values.length - 1] -= values[values.length - 1] * 2;
       consoleField.innerHTML = values[values.length - 1];
       negating = true;
       percenting = false;
+      breakNegate = false;
       valueString = consoleField.innerHTML;
       console.log(values);
-    } else if (special[i].innerHTML === "%") {
+    } else if (special[i].innerHTML === "%" && consoleField.innerHTML !== "0") {
+      console.log(breakDiv, breakMult, breakAdd, breakSubtract);
       if (breakDiv || breakMult || breakAdd || breakSubtract) {
-
+        if (!negating) {
         if (breakDiv) {
           dividing = true;
           multiplying = false;
@@ -435,6 +450,8 @@ for (let i = 0; i < special.length; i++) {
         }
         specOp = true;
         console.log(values);
+        //extra smily _________
+      }
       } else {
         if (values.length < 1) {
           values.push(parseFloat(valueString));
@@ -443,8 +460,16 @@ for (let i = 0; i < special.length; i++) {
         consoleField.innerHTML = values[values.length - 1];
         console.log(values);
       }
+      if (negating) {
+        if (values.length < 1) {
+          values.push(parseFloat(valueString));
+        }
+        values[values.length - 1] = values[values.length - 1] / 100;
+        consoleField.innerHTML = values[values.length - 1];
+        console.log(values);
+      }
       percenting = true;
-      negating = false;
+      // negating = false;
       console.log(valueString);
     }
   });
