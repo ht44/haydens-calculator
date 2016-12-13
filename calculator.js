@@ -113,7 +113,10 @@ for (let i = 0; i < numButtons.length; i++) {
       valueString = "";
       evaluating = false;
     }
-    if (! consoleField.innerHTML.includes(".") || numButtons[i].innerHTML !== ".") {
+    if (!valueString.includes(".") || numButtons[i].innerHTML !== ".") {
+      if (valueString === "" && numButtons[i].innerHTML === ".") {
+        valueString = "0";
+      }
       valueString += numButtons[i].innerHTML;
       consoleField.innerHTML = valueString;
     }
