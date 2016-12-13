@@ -20,6 +20,7 @@ let doneMultOrDiv = false;
 let doneOrderOp = false;
 let evaluating = false;
 let operating = false;
+let specOp = false;
 let breakDiv = false;
 let breakMult = false;
 let breakSubtract = false;
@@ -286,7 +287,6 @@ for (let i = 0; i < controls.length; i++) {
 resultButton.addEventListener("click", function() {
   evaluating = true;
   if (operating) {
-    console.log(storeValue);
     selfOperate = storeValue;
     values.push(selfOperate);
     operate();
@@ -336,7 +336,7 @@ resultButton.addEventListener("click", function() {
   }
   doneMultOrDiv = false;
   multiplyingOrDividing = false;
-  // valueString = "";
+  specOp = false;
   console.log(values);
 });
 
@@ -359,9 +359,34 @@ for (let i = 0; i < special.length; i++) {
       }
       values[values.length - 1] -= values[values.length - 1] * 2;
       consoleField.innerHTML = values[values.length - 1];
-      console.log(values);
     } else if (special[i].innerHTML === "%") {
-      console.log("tested percent");
+      if (breakDiv || breakMult || breakAdd || breakSubtract) {
+        if (breakDiv || breakSubtract || breakAdd) {
+          multiplying = true;
+        }
+        values.push(parseFloat(valueString));
+        values[values.length - 1] = values[values.length - 1] / 100;
+        operate();
+        consoleField.innerHTML = values[values.length - 1];
+        valueString = consoleField.innerHTML;
+        values.pop();
+        values.pop();
+        console.log(values);
+        if (breakDiv || breakSubtract || breakAdd) {
+          multiplying = false;
+        }
+        specOp = true;
+      } else if (!specOp) {
+        if (values.length < 1) {
+          values.push(parseFloat(valueString));
+        }
+        values[values.length - 1] = values[values.length - 1] / 100;
+        consoleField.innerHTML = values[values.length - 1];
+      }
+      breakDiv = false;
+      breakMult = false;
+      breakAdd = false;
+      breakSubtract = false;
     }
   });
 }
