@@ -161,6 +161,9 @@ for (let i = 0; i < controls.length; i++) {
         subtracting = false;
         adding = false;
       }
+      if (operating) {
+        multiplyingOrDividing = false;
+      }
 
     // MULTIPLY BUTTON —————————————————————
     } else if (controls[i].innerHTML === "×") {
@@ -190,6 +193,9 @@ for (let i = 0; i < controls.length; i++) {
         multiplying = true;
         subtracting = false;
         adding = false;
+      }
+      if (operating) {
+        multiplyingOrDividing = false;
       }
 
     // SUBTRACT BUTTON ——————————————————————
@@ -256,10 +262,9 @@ for (let i = 0; i < controls.length; i++) {
         adding = true;
       }
     }
-    // valueString = consoleField.innerHTML;
-    // storeValue = parseFloat(valueString);
-    // valueString = "";
+
     operating = true;
+    ranPemdas = false;
     if (evaluating) {
       ranPemdas = true;
     }
@@ -272,8 +277,8 @@ for (let i = 0; i < controls.length; i++) {
 
 // Listening for "result" button click ———
 resultButton.addEventListener("click", function() {
+  evaluating = true;
   if (operating) {
-    evaluating = true;
     selfOperate = storeValue;
     values.push(selfOperate);
     operate();
@@ -281,8 +286,8 @@ resultButton.addEventListener("click", function() {
   } else {
     evaluate();
   }
-  if (multiplyingOrDividing) {
-    doneMultOrDiv = true;
+  if (multiplyingOrDividing && !operating) {
+      doneMultOrDiv = true;
   }
   if (doneMultOrDiv) {
     if (breakAdd) {
@@ -323,6 +328,7 @@ resultButton.addEventListener("click", function() {
   }
   doneMultOrDiv = false;
   multiplyingOrDividing = false;
+  // valueString = "";
   console.log(values);
 });
 
