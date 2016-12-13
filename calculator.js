@@ -354,9 +354,12 @@ for (let i = 0; i < special.length; i++) {
       consoleField.innerHTML = "0";
       special[i].innerHTML = "AC";
     } else if (special[i].innerHTML === "±") {
-      console.log("tested negate");
-      console.log(Math.sign(values[values.length - 1]));
-      console.log(values[values.length - 1]);
+      if (values.length < 1) {
+        values.push(parseFloat(valueString));
+      }
+      values[values.length - 1] -= values[values.length - 1] * 2;
+      consoleField.innerHTML = values[values.length - 1];
+      console.log(values);
     } else if (special[i].innerHTML === "%") {
       console.log("tested percent");
     }
