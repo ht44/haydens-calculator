@@ -109,6 +109,10 @@ for (let i = 0; i < numButtons.length; i++) {
     document.getElementById("clear").innerHTML = "C";
     operating = false;
     doneMultOrDiv = false;
+    if (evaluating) {
+      valueString = "";
+      evaluating = false;
+    }
     if (! consoleField.innerHTML.includes(".") || numButtons[i].innerHTML !== ".") {
       valueString += numButtons[i].innerHTML;
       consoleField.innerHTML = valueString;
