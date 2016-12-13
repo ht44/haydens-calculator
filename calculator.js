@@ -262,7 +262,7 @@ for (let i = 0; i < controls.length; i++) {
         adding = true;
       }
     }
-
+    storeValue = values[values.length -1];
     operating = true;
     ranPemdas = false;
     if (evaluating) {
@@ -279,6 +279,7 @@ for (let i = 0; i < controls.length; i++) {
 resultButton.addEventListener("click", function() {
   evaluating = true;
   if (operating) {
+    console.log(storeValue);
     selfOperate = storeValue;
     values.push(selfOperate);
     operate();
