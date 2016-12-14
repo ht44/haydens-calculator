@@ -434,6 +434,7 @@ for (let i = 0; i < special.length; i++) {
     } else if (special[i].innerHTML === "%" && consoleField.innerHTML !== "0") {
       console.log(breakDiv, breakMult, breakAdd, breakSubtract);
       if (breakDiv || breakMult || breakAdd || breakSubtract) {
+        console.log("MANCRAB");
         if (dividing) {wasDividing = true;}
         if (multiplying) {wasMultiplying = true;}
         if (subtracting) {wasSubtracting = true;}
@@ -447,6 +448,7 @@ for (let i = 0; i < special.length; i++) {
         valueString = consoleField.innerHTML;
         values.pop();
         if (percenting && breakPercent) {
+          console.log("LADYCRAB");
           values.push(parseFloat(valueString));
           operate();
         }
@@ -483,19 +485,21 @@ for (let i = 0; i < special.length; i++) {
         specOp = true;
         console.log(values);
       } else {
+        console.log("HUMANCRAB");
         if (values.length < 1) {
           values.push(parseFloat(valueString));
         }
         values[values.length - 1] = values[values.length - 1] / 100;
         consoleField.innerHTML = values[values.length - 1];
       }
-      if (negating) {
-        if (values.length < 1) {
-          values.push(parseFloat(valueString));
-        }
-        values[values.length - 1] = values[values.length - 1] / 100;
-        consoleField.innerHTML = values[values.length - 1];
-      }
+      // if (negating) {
+      //   console.log("EXOCRAB");
+      //   if (values.length < 1) {
+      //     values.push(parseFloat(valueString));
+      //   }
+      //   values[values.length - 1] = values[values.length - 1] / 100;
+      //   consoleField.innerHTML = values[values.length - 1];
+      // }
       percenting = true;
       // negating = false;
       console.log(values);
