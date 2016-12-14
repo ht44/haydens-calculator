@@ -21,10 +21,8 @@ let wasAdding = false;
 let addingOrSubtracting = false;
 let multiplyingOrDividing = false;
 let doneMultOrDiv = false;
-let doneOrderOp = false;
 let evaluating = false;
 let operating = false;
-let specOp = false;
 let breakDiv = false;
 let breakMult = false;
 let breakSubtract = false;
@@ -32,8 +30,6 @@ let breakAdd = false;
 let breakPercent = true;
 let breakNegate = false;
 let breakEvaluate = false;
-let empty = true;
-let posNeg = true;
 let ranPemdas = false;
 let negating = false;
 let percenting = false;
@@ -207,7 +203,6 @@ for (let i = 0; i < controls.length; i++) {
         multiplyingOrDividing = true;
       }
       if (addingOrSubtracting) {
-        console.log("WAIDLECRAB");
         if (percenting) {
           breakPercent = true;
         }
@@ -222,7 +217,6 @@ for (let i = 0; i < controls.length; i++) {
         adding = false;
         addingOrSubtracting = false;
       } else {
-        console.log("SUMDACRB");
         if (values.length > 1 && evaluating === false) {
           if (!operating) {
             operate();
@@ -312,18 +306,12 @@ for (let i = 0; i < controls.length; i++) {
     }
     evaluating = false;
     negating = false;
-    console.log(values);
-    // console.log(pemdas);
-    // console.log(dividing, multiplying, subtracting, adding);
   });
 }
 
 // Listening for "result" button click ———
 resultButton.addEventListener("click", function() {
-  if (percenting) {
-    console.log(pemdas);
-  }
-  if (negating) {
+  if (negating && breakNegate) {
     values.pop();
   }
   if (breakPercent) {
@@ -336,7 +324,6 @@ resultButton.addEventListener("click", function() {
     operate();
     doneMultOrDiv = false;
   } else {
-    console.log("kingcrab");
     evaluate();
   }
   if (multiplyingOrDividing && !operating) {
@@ -357,16 +344,12 @@ resultButton.addEventListener("click", function() {
       adding = false;
       breakAdd = false;
     }
-    console.log(ranPemdas, operating);
     if (!ranPemdas || operating) {
-      console.log("orderOp");
       orderOp();
     } else {
-      console.log("operateAfter");
       operateAfter();
     }
     if (breakPercent) {
-      console.log("SPIDERCRAB");
       orderOp();
     }
     if (breakDiv) {
@@ -387,16 +370,14 @@ resultButton.addEventListener("click", function() {
   }
   doneMultOrDiv = false;
   multiplyingOrDividing = false;
-  specOp = false;
   percenting = false;
-    breakDiv = false;
-    breakMult = false;
-    breakAdd = false;
-    breakSubtract = false;
+  breakDiv = false;
+  breakMult = false;
+  breakAdd = false;
+  breakSubtract = false;
   breakPercent = false;
   breakNegate = false;
   breakEvaluate = false;
-  console.log(values);
 });
 
 // Listening for "special" button clicks —
@@ -420,7 +401,6 @@ for (let i = 0; i < special.length; i++) {
       }
       if (values.length < 1 || breakNegate) {
         values.push(parseFloat(valueString));
-        console.log(values);
       }
       values[values.length - 1] -= values[values.length - 1] * 2;
       consoleField.innerHTML = values[values.length - 1];
@@ -430,11 +410,8 @@ for (let i = 0; i < special.length; i++) {
       if (!breakEvaluate) {
         valueString = consoleField.innerHTML;
       }
-      console.log(values);
     } else if (special[i].innerHTML === "%" && consoleField.innerHTML !== "0") {
-      console.log(breakDiv, breakMult, breakAdd, breakSubtract);
       if (breakDiv || breakMult || breakAdd || breakSubtract) {
-        console.log("MANCRAB");
         if (dividing) {wasDividing = true;}
         if (multiplying) {wasMultiplying = true;}
         if (subtracting) {wasSubtracting = true;}
@@ -448,7 +425,6 @@ for (let i = 0; i < special.length; i++) {
         valueString = consoleField.innerHTML;
         values.pop();
         if (percenting && breakPercent) {
-          console.log("LADYCRAB");
           values.push(parseFloat(valueString));
           operate();
         }
@@ -482,27 +458,15 @@ for (let i = 0; i < special.length; i++) {
         wasMultiplying = false;
         wasSubtracting = false;
         wasAdding = false;
-        specOp = true;
-        console.log(values);
       } else {
-        console.log("HUMANCRAB");
         if (values.length < 1) {
           values.push(parseFloat(valueString));
         }
         values[values.length - 1] = values[values.length - 1] / 100;
         consoleField.innerHTML = values[values.length - 1];
       }
-      // if (negating) {
-      //   console.log("EXOCRAB");
-      //   if (values.length < 1) {
-      //     values.push(parseFloat(valueString));
-      //   }
-      //   values[values.length - 1] = values[values.length - 1] / 100;
-      //   consoleField.innerHTML = values[values.length - 1];
-      // }
       percenting = true;
-      // negating = false;
-      console.log(values);
+      negating = false;
     }
   });
 }
