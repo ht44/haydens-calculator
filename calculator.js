@@ -303,6 +303,7 @@ for (let i = 0; i < controls.length; i++) {
       ranPemdas = true;
     }
     evaluating = false;
+    negating = false;
     console.log(values);
     // console.log(pemdas);
     // console.log(dividing, multiplying, subtracting, adding);
