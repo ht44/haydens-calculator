@@ -14,6 +14,10 @@ let dividing = false;
 let multiplying = false;
 let subtracting = false;
 let adding = false;
+let wasDividing = false;
+let wasMultiplying = false;
+let wasSubtracting = false;
+let wasAdding = false;
 let addingOrSubtracting = false;
 let multiplyingOrDividing = false;
 let doneMultOrDiv = false;
@@ -119,6 +123,10 @@ for (let i = 0; i < numButtons.length; i++) {
     if (evaluating) {
       valueString = "";
       evaluating = false;
+    }
+    if (percenting) {
+      valueString = "";
+      percenting = false;
     }
     if (addingOrSubtracting || multiplyingOrDividing) {
       breakNegate = true;
@@ -303,7 +311,12 @@ for (let i = 0; i < controls.length; i++) {
 
 // Listening for "result" button click ———
 resultButton.addEventListener("click", function() {
-  console.log(multiplyingOrDividing);
+  if (percenting) {
+    console.log(pemdas);
+  }
+  if (negating) {
+    values.pop();
+  }
   if (breakPercent) {
     ranPemdas = true;
   }
@@ -344,6 +357,7 @@ resultButton.addEventListener("click", function() {
       operateAfter();
     }
     if (breakPercent) {
+      console.log("SPIDERCRAB");
       orderOp();
     }
     if (breakDiv) {
@@ -366,17 +380,14 @@ resultButton.addEventListener("click", function() {
   multiplyingOrDividing = false;
   specOp = false;
   percenting = false;
-  if (breakPercent) {
     breakDiv = false;
     breakMult = false;
     breakAdd = false;
     breakSubtract = false;
-  }
   breakPercent = false;
   breakNegate = false;
   breakEvaluate = false;
   console.log(values);
-  console.log(valueString);
 });
 
 // Listening for "special" button clicks —
@@ -399,8 +410,8 @@ for (let i = 0; i < special.length; i++) {
         breakEvaluate = true;
       }
       if (values.length < 1 || breakNegate) {
-        console.log("spidercrab");
         values.push(parseFloat(valueString));
+        console.log(values);
       }
       values[values.length - 1] -= values[values.length - 1] * 2;
       consoleField.innerHTML = values[values.length - 1];
@@ -414,58 +425,60 @@ for (let i = 0; i < special.length; i++) {
     } else if (special[i].innerHTML === "%" && consoleField.innerHTML !== "0") {
       console.log(breakDiv, breakMult, breakAdd, breakSubtract);
       if (breakDiv || breakMult || breakAdd || breakSubtract) {
-        if (!negating) {
-        if (breakDiv) {
-          dividing = true;
-          multiplying = false;
-          subtracting = false;
-          adding = false;
-        } else if (breakMult) {
-          dividing = false;
-          multiplying = true;
-          subtracting = false;
-          adding = false;
-        } else if (breakSubtract) {
-          dividing = false;
-          multiplying = false;
-          subtracting = true;
-          adding = false;
-        } else if (breakAdd) {
-          dividing = false;
-          multiplying = false;
-          subtracting = false;
-          adding = true;
-        }
-
-        pemdas = values[values.length - 1];
-        if (breakDiv || breakSubtract || breakAdd) {
-          dividing = false;
-          multiplying = true;
-        }
+        if (dividing) {wasDividing = true;}
+        if (multiplying) {wasMultiplying = true;}
+        if (subtracting) {wasSubtracting = true;}
+        if (adding) {wasAdding = true;}
+        dividing = false;
+        multiplying = true;
         values.push(parseFloat(valueString));
         values[values.length - 1] = values[values.length - 1] / 100;
         operate();
         consoleField.innerHTML = values[values.length - 1];
         valueString = consoleField.innerHTML;
         values.pop();
-        values.pop();
-        if (breakDiv || breakSubtract || breakAdd) {
-          multiplying = false;
-          if (breakDiv) {
-            dividing = true;
-          }
+        if (percenting && breakPercent) {
+          values.push(parseFloat(valueString));
+          operate();
         }
+        values.pop();
+        if (percenting && breakPercent) {
+          consoleField.innerHTML = values[values.length - 1];
+          valueString = consoleField.innerHTML;
+        }
+        if (wasDividing) {
+          dividing = true;
+          multiplying = false;
+          subtracting = false;
+          adding = false;
+        } else if (wasMultiplying) {
+          dividing = false;
+          multiplying = true;
+          subtracting = false;
+          adding = false;
+        } else if (wasSubtracting) {
+          dividing = false;
+          multiplying = false;
+          subtracting = true;
+          adding = false;
+        } else if (wasAdding) {
+          dividing = false;
+          multiplying = false;
+          subtracting = false;
+          adding = true;
+        }
+        wasDividing = false;
+        wasMultiplying = false;
+        wasSubtracting = false;
+        wasAdding = false;
         specOp = true;
         console.log(values);
-        //extra smily _________
-      }
       } else {
         if (values.length < 1) {
           values.push(parseFloat(valueString));
         }
         values[values.length - 1] = values[values.length - 1] / 100;
         consoleField.innerHTML = values[values.length - 1];
-        console.log(values);
       }
       if (negating) {
         if (values.length < 1) {
@@ -473,11 +486,9 @@ for (let i = 0; i < special.length; i++) {
         }
         values[values.length - 1] = values[values.length - 1] / 100;
         consoleField.innerHTML = values[values.length - 1];
-        console.log(values);
       }
       percenting = true;
       // negating = false;
-      console.log(valueString);
     }
   });
 }
