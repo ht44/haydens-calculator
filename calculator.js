@@ -27,6 +27,7 @@ let breakSubtract = false;
 let breakAdd = false;
 let breakPercent = true;
 let breakNegate = false;
+let breakEvaluate = false;
 let empty = true;
 let posNeg = true;
 let ranPemdas = false;
@@ -100,9 +101,7 @@ const operateAfter = () => {
 
 const evaluate = () => {
   evaluating = true;
-  if (!negating) {
-    values.push(parseFloat(valueString));
-  }
+  values.push(parseFloat(valueString));
   negating = false;
   operate();
 };
@@ -304,7 +303,7 @@ for (let i = 0; i < controls.length; i++) {
 
 // Listening for "result" button click ———
 resultButton.addEventListener("click", function() {
-  console.log(breakDiv, breakMult, breakSubtract, breakAdd);
+  console.log(multiplyingOrDividing);
   if (breakPercent) {
     ranPemdas = true;
   }
@@ -375,7 +374,9 @@ resultButton.addEventListener("click", function() {
   }
   breakPercent = false;
   breakNegate = false;
+  breakEvaluate = false;
   console.log(values);
+  console.log(valueString);
 });
 
 // Listening for "special" button clicks —
@@ -394,7 +395,11 @@ for (let i = 0; i < special.length; i++) {
       consoleField.innerHTML = "0";
       special[i].innerHTML = "AC";
     } else if (special[i].innerHTML === "±" && consoleField.innerHTML !== "0") {
+      if (evaluating) {
+        breakEvaluate = true;
+      }
       if (values.length < 1 || breakNegate) {
+        console.log("spidercrab");
         values.push(parseFloat(valueString));
       }
       values[values.length - 1] -= values[values.length - 1] * 2;
@@ -402,7 +407,9 @@ for (let i = 0; i < special.length; i++) {
       negating = true;
       percenting = false;
       breakNegate = false;
-      valueString = consoleField.innerHTML;
+      if (!breakEvaluate) {
+        valueString = consoleField.innerHTML;
+      }
       console.log(values);
     } else if (special[i].innerHTML === "%" && consoleField.innerHTML !== "0") {
       console.log(breakDiv, breakMult, breakAdd, breakSubtract);
