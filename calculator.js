@@ -195,6 +195,9 @@ for (let i = 0; i < controls.length; i++) {
       if (operating) {
         multiplyingOrDividing = false;
       }
+      if (percenting && values.length === 2) {
+        values.pop();
+      }
 
     // MULTIPLY BUTTON —————————————————————
     } else if (controls[i].innerHTML === "×") {
@@ -204,6 +207,7 @@ for (let i = 0; i < controls.length; i++) {
         multiplyingOrDividing = true;
       }
       if (addingOrSubtracting) {
+        console.log("WAIDLECRAB");
         if (percenting) {
           breakPercent = true;
         }
@@ -218,6 +222,7 @@ for (let i = 0; i < controls.length; i++) {
         adding = false;
         addingOrSubtracting = false;
       } else {
+        console.log("SUMDACRB");
         if (values.length > 1 && evaluating === false) {
           if (!operating) {
             operate();
@@ -230,6 +235,9 @@ for (let i = 0; i < controls.length; i++) {
       }
       if (operating) {
         multiplyingOrDividing = false;
+      }
+      if (percenting && values.length === 2) {
+        values.pop();
       }
 
     // SUBTRACT BUTTON ——————————————————————
@@ -490,6 +498,7 @@ for (let i = 0; i < special.length; i++) {
       }
       percenting = true;
       // negating = false;
+      console.log(values);
     }
   });
 }
