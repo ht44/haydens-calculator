@@ -128,6 +128,11 @@ for (let i = 0; i < numButtons.length; i++) {
       breakNegate = true;
     }
     if (!valueString.includes(".") || numButtons[i].innerHTML !== ".") {
+      // Only thing not hard tested below —————————
+      if (valueString === "0" && numButtons[i].innerHTML === "0") {
+        valueString = "";
+      }
+      // Only thing not hard tested above —————————
       if (valueString === "" && numButtons[i].innerHTML === ".") {
         valueString = "0";
       }
