@@ -124,6 +124,14 @@ for (let i = 0; i < numButtons.length; i++) {
       valueString = "";
       percenting = false;
     }
+    // new ————————————-
+    if (breakNegate) {
+      if (multiplyingOrDividing || addingOrSubtracting) {
+        values.push(parseFloat(valueString));
+        valueString = "";
+      }
+    }
+    // new above ———————
     if (addingOrSubtracting || multiplyingOrDividing) {
       if (negating) {
         breakNegate = true;
@@ -147,6 +155,7 @@ for (let i = 0; i < numButtons.length; i++) {
 // Listening for "control" button clicks —
 for (let i = 0; i < controls.length; i++) {
   controls[i].addEventListener("click", function() {
+    console.log(valueString);
     // operating = true;
     // Empty case ————————————————————————
     if (negating) {
@@ -427,11 +436,14 @@ for (let i = 0; i < special.length; i++) {
       negating = true;
       percenting = false;
       breakNegate = false;
-      if (!breakEvaluate) {
+      if (!breakEvaluate || negating) {
         console.log("REDCRAB");
         valueString = consoleField.innerHTML;
       }
       breakEvaluate = false;
+      if (negating) {
+        breakEvaluate = true;
+      }
     } else if (special[i].innerHTML === "%" && consoleField.innerHTML !== "0") {
       if (breakDiv || breakMult || breakAdd || breakSubtract) {
         if (dividing) {wasDividing = true;}
