@@ -456,6 +456,15 @@ for (let i = 0; i < special.length; i++) {
         breakEvaluate = true;
       }
     } else if (special[i].innerHTML === "%" && consoleField.innerHTML !== "0") {
+      // new code to fixe self operate percenting
+      // identical to beginning of negate button listener
+      if (operating) {
+        valueString = values[values.length - 1].toString();
+        if (!evaluating) {
+          operating = false;
+        }
+      }
+      // end new code ———————————————————————————————————
       if (breakDiv || breakMult || breakAdd || breakSubtract) {
         if (dividing) {wasDividing = true;}
         if (multiplying) {wasMultiplying = true;}
