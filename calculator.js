@@ -125,7 +125,7 @@ for (let i = 0; i < numButtons.length; i++) {
       percenting = false;
     }
     if (addingOrSubtracting || multiplyingOrDividing) {
-      if (percenting) {
+      if (negating) {
         breakNegate = true;
       }
     }
@@ -310,6 +310,8 @@ for (let i = 0; i < controls.length; i++) {
     ranPemdas = false;
     if (evaluating) {
       ranPemdas = true;
+      //added breakNegate line to fix
+      // breakNegate = true;
     }
     evaluating = false;
     negating = false;
@@ -319,12 +321,12 @@ for (let i = 0; i < controls.length; i++) {
 
 // Listening for "result" button click ———
 resultButton.addEventListener("click", function() {
-  console.log(negating, breakNegate);
   // or solves for empty case, and solves for everything else.
   // need to figure out which one is which
   // think fixed by adding not evaluating condition
   if (negating || breakNegate) {
     if (!evaluating) {
+      console.log("Woocrab");
       values.pop();
     }
   }
@@ -411,10 +413,13 @@ for (let i = 0; i < special.length; i++) {
       consoleField.innerHTML = "0";
       special[i].innerHTML = "AC";
     } else if (special[i].innerHTML === "±" && consoleField.innerHTML !== "0") {
+      console.log(breakNegate, breakEvaluate);
       if (evaluating) {
         breakEvaluate = true;
       }
-      if (values.length < 1 || breakNegate) {
+      // added or not breakEvaluate
+      if (values.length <= 1 || breakNegate || !breakEvaluate) {
+        console.log("BLUECRAB");
         values.push(parseFloat(valueString));
       }
       values[values.length - 1] -= values[values.length - 1] * 2;
@@ -423,8 +428,10 @@ for (let i = 0; i < special.length; i++) {
       percenting = false;
       breakNegate = false;
       if (!breakEvaluate) {
+        console.log("REDCRAB");
         valueString = consoleField.innerHTML;
       }
+      breakEvaluate = false;
     } else if (special[i].innerHTML === "%" && consoleField.innerHTML !== "0") {
       if (breakDiv || breakMult || breakAdd || breakSubtract) {
         if (dividing) {wasDividing = true;}
@@ -481,7 +488,7 @@ for (let i = 0; i < special.length; i++) {
         consoleField.innerHTML = values[values.length - 1];
       }
       percenting = true;
-      negating = false;
+      // negating = false;
     }
     console.log(values);
   });
