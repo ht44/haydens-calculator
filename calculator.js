@@ -125,7 +125,9 @@ for (let i = 0; i < numButtons.length; i++) {
       percenting = false;
     }
     if (addingOrSubtracting || multiplyingOrDividing) {
-      breakNegate = true;
+      if (percenting) {
+        breakNegate = true;
+      }
     }
     if (!valueString.includes(".") || numButtons[i].innerHTML !== ".") {
       // Only thing not hard tested below —————————
