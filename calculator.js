@@ -125,12 +125,19 @@ for (let i = 0; i < numButtons.length; i++) {
       percenting = false;
     }
     // new ————————————-
+
+    // if (breakNegate) {
+    //   console.log("crab");
+    //   if (multiplyingOrDividing || addingOrSubtracting) {
+    //     values.push(parseFloat(valueString));
+    //     // valueString = "";
+    //   }
+    // }
+
     if (breakNegate) {
-      if (multiplyingOrDividing || addingOrSubtracting) {
-        values.push(parseFloat(valueString));
-        valueString = "";
-      }
+      evaluating = true;
     }
+
     // new above ———————
     if (addingOrSubtracting || multiplyingOrDividing) {
       if (negating) {
@@ -155,7 +162,6 @@ for (let i = 0; i < numButtons.length; i++) {
 // Listening for "control" button clicks —
 for (let i = 0; i < controls.length; i++) {
   controls[i].addEventListener("click", function() {
-    console.log(valueString);
     // operating = true;
     // Empty case ————————————————————————
     if (negating) {
@@ -335,7 +341,6 @@ resultButton.addEventListener("click", function() {
   // think fixed by adding not evaluating condition
   if (negating || breakNegate) {
     if (!evaluating) {
-      console.log("Woocrab");
       values.pop();
     }
   }
@@ -423,13 +428,17 @@ for (let i = 0; i < special.length; i++) {
       consoleField.innerHTML = "0";
       special[i].innerHTML = "AC";
     } else if (special[i].innerHTML === "±" && consoleField.innerHTML !== "0") {
-      console.log(breakNegate, breakEvaluate);
+      if (operating) {
+        valueString = values[values.length - 1].toString();
+        if (!evaluating) {
+          operating = false;
+        }
+      }
       if (evaluating) {
         breakEvaluate = true;
       }
       // added or not breakEvaluate
       if (values.length <= 1 || breakNegate || !breakEvaluate) {
-        console.log("BLUECRAB");
         values.push(parseFloat(valueString));
       }
       values[values.length - 1] -= values[values.length - 1] * 2;
@@ -438,8 +447,9 @@ for (let i = 0; i < special.length; i++) {
       percenting = false;
       breakNegate = false;
       if (!breakEvaluate || negating) {
-        console.log("REDCRAB");
-        valueString = consoleField.innerHTML;
+        if (!evaluating) {
+          valueString = consoleField.innerHTML;
+        }
       }
       breakEvaluate = false;
       if (negating) {
