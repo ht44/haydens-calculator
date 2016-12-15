@@ -311,13 +311,20 @@ for (let i = 0; i < controls.length; i++) {
     }
     evaluating = false;
     negating = false;
+    console.log(values);
   });
 }
 
 // Listening for "result" button click ———
 resultButton.addEventListener("click", function() {
-  if (negating && breakNegate) {
-    values.pop();
+  console.log(negating, breakNegate);
+  // or solves for empty case, and solves for everything else.
+  // need to figure out which one is which
+  // think fixed by adding not evaluating condition
+  if (negating || breakNegate) {
+    if (!evaluating) {
+      values.pop();
+    }
   }
   if (breakPercent) {
     ranPemdas = true;
@@ -383,6 +390,7 @@ resultButton.addEventListener("click", function() {
   breakPercent = false;
   breakNegate = false;
   breakEvaluate = false;
+  console.log(values);
 });
 
 // Listening for "special" button clicks —
@@ -473,5 +481,6 @@ for (let i = 0; i < special.length; i++) {
       percenting = true;
       negating = false;
     }
+    console.log(values);
   });
 }
