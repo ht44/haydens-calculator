@@ -417,6 +417,7 @@ for (let i = 0; i < special.length; i++) {
       evaluating = false;
       valueString = "";
       values = [];
+      consoleField.innerHTML = "0";
     } else if (special[i].innerHTML === "C") {
       valueString = "";
       consoleField.innerHTML = "0";
